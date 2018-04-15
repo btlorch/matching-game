@@ -206,10 +206,10 @@ class Game extends React.Component {
     }
 }
 
-ReactDOM.render(
-    <Game />,
-    document.getElementById('root')
-);
+// ReactDOM.render(
+//     <Game />,
+//     document.getElementById('root')
+// );
 
 function createCards(numCards) {
     let cards = Array(numCards);
@@ -232,4 +232,12 @@ function createCards(numCards) {
         };
     }
     return cards;
+}
+
+// 3rd Party functions
+function sleep(miliseconds) {
+   var currentTime = new Date().getTime();
+
+   while (currentTime + miliseconds >= new Date().getTime()) {
+   }
 }
