@@ -40,8 +40,7 @@ body {
 }
 
 #root {
-    min-height: 100%;
-    /*background: red;*/
+    min-height: calc(100% - 50px);
 }
 
 .game {
@@ -52,7 +51,7 @@ body {
     top:0;
     left:0;
     right:0;
-    margin: 50px;
+    margin: 65px 50px 90px 50px;
     /*background-color: green;*/
 }
 
@@ -64,14 +63,14 @@ body {
     position: absolute;
     margin: 0;
     padding: 0;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     perspective: 800px;
 }
 
 .card img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     /* Hack to avoid anti-aliasing artifacts */
     outline: 1px solid transparent;
 }

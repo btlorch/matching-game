@@ -1,13 +1,16 @@
+/*global FB*/
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import axios from 'axios'
 
 
 function Card(props) {
     // Shift to center
     let style = {
-        top: props.y - 100,
-        left: props.x - 100,
+        top: props.y - 125,
+        left: props.x - 125,
         transform: `rotate( ${props.rotation}deg )`,
     };
 
@@ -30,10 +33,10 @@ function Card(props) {
              style={style}>
             <div className={faceClass} onClick={props.onClick}>
                 <div className="front">
-                    <img src="http://via.placeholder.com/200x200" alt="Bla"/>
+                    <img src="logo.png" alt="Front"/>
                 </div>
                 <div className="back">
-                    <img src="christmas_tree.jpg" alt="Christmas tree" />
+                    <img src={props.imgUrl} alt="Back" />
                 </div>
             </div>
         </div>
@@ -44,7 +47,7 @@ function Card(props) {
 class CardDeck extends React.Component {
     constructor(props) {
         super(props);
-        this.cards = createCards(12);
+        this.cards = createCards(20);
         this.state = {
             cardProperties: this.cards.map(() => {
                 return {
@@ -142,6 +145,7 @@ class CardDeck extends React.Component {
                 x={card.x * this.props.gameWindowWidth}
                 y={card.y * this.props.gameWindowHeight}
                 rotation={card.rotation}
+                imgUrl={card.imgUrl}
                 open={this.state.cardProperties[i].open}
                 match={this.state.cardProperties[i].match}
                 mismatch={this.state.cardProperties[i].mismatch}
@@ -198,6 +202,7 @@ class Game extends React.Component {
         return (
             <div ref={ div => { this.div = div }} className="game">
                 <CardDeck
+                    onClick={this.handleClick}
                     gameWindowWidth={this.state.gameWindowWidth}
                     gameWindowHeight={this.state.gameWindowHeight}
                 />
@@ -206,12 +211,38 @@ class Game extends React.Component {
     }
 }
 
-// ReactDOM.render(
-//     <Game />,
-//     document.getElementById('root')
-// );
+ReactDOM.render(
+    <Game />,
+    document.getElementById('root')
+);
 
 function createCards(numCards) {
+    let images = [
+        "dartmouth_01.jpg",
+        "dartmouth_02.jpg",
+        "lisa_01.jpg",
+        "lisa_02.jpg",
+        "stream_01.jpg",
+        "stream_02.jpg",
+        "sunrise_01.jpg",
+        "sunrise_02.jpg",
+        "vietnam_01.jpg",
+        "vietnam_02.jpg",
+        "white_mountains_01.jpg",
+        "white_mountains_02.jpg",
+        "london_01.jpg",
+        "london_02.jpg",
+        "waterfall_01.jpg",
+        "waterfall_02.jpg",
+        "transportation_01.jpg",
+        "transportation_02.jpg",
+        "animal_01.jpg",
+        "animal_02.jpg"
+    ];
+
+    shuffle(images);
+
+
     let cards = Array(numCards);
     let rows = Math.floor(Math.sqrt(numCards));
     let cols = Math.ceil(numCards * 1.0 / rows);
@@ -222,22 +253,26 @@ function createCards(numCards) {
 
     // x and y are going to be the center coordinates
     for (let i = 0; i < numCards; i++) {
+        let matchKey = images[i].match("^[a-z]+")[0];
+        console.log(matchKey);
+
         let row = Math.floor(i / cols);
         let col = i % cols;
         cards[i] = {
             x: col * 1.0 / cols + colOffset,
             y: row * 1.0 / rows + rowOffset,
             rotation: Math.round(Math.random() * 20) - 10,
-            matchKey: Math.floor(i / 2),
+            matchKey: matchKey,
+            imgUrl: images[i],
         };
     }
     return cards;
 }
 
-// 3rd Party functions
-function sleep(miliseconds) {
-   var currentTime = new Date().getTime();
-
-   while (currentTime + miliseconds >= new Date().getTime()) {
-   }
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
