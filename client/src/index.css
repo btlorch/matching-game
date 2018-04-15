@@ -1,4 +1,92 @@
+html,
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    min-height: 100%;
+    background: red;
+}
+
+.game {
+    display: block;
+    position: absolute;
+    height: auto;
+    bottom:0;
+    top:0;
+    left:0;
+    right:0;
+    margin: 50px;
+    background-color: green;
+}
+
+.card-deck {
+    position: relative;
+}
+
+.card {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    height: 200px;
+    perspective: 800px;
+}
+
+.card:hover {
+    cursor: pointer;
+}
+
+.card img {
+    width: 200px;
+    height: 200px;
+    /* Hack to avoid anti-aliasing artifacts */
+    outline: 1px solid transparent;
+}
+
+/** Flipping **/
+.face {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    -webkit-transition: -webkit-transform 0.5s;
+    -moz-transition: -moz-transform 0.5s;
+    -o-transition: -o-transform 0.5s;
+    transition: transform 0.5s;
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transform-origin: 50% 50%;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.face div {
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 260px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 140px;
+    position: absolute;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.face .back {
+    -webkit-transform: rotateY( 180deg );
+    -moz-transform: rotateY( 180deg );
+    -o-transform: rotateY( 180deg );
+    transform: rotateY( 180deg );
+}
+
+.face.flipped {
+    -webkit-transform: rotateY( 180deg );
+    -moz-transform: rotateY( 180deg );
+    -o-transform: rotateY( 180deg );
+    transform: rotateY( 180deg );
 }
