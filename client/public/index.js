@@ -1,3 +1,5 @@
+/*global FB*/
+
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 // import './index.css';
@@ -6,8 +8,8 @@
 function Card(props) {
     // Shift to center
     let style = {
-        top: props.y - 100,
-        left: props.x - 100,
+        top: props.y - 125,
+        left: props.x - 125,
         transform: `rotate( ${props.rotation}deg )`,
     };
 
@@ -25,24 +27,26 @@ function Card(props) {
         faceClass += " hidden";
     }
 
-    return React.createElement(
-        "div",
-        { className: "card",
-            style: style },
-        React.createElement(
-            "div",
-            { className: faceClass, onClick: props.onClick },
-            React.createElement(
-                "div",
-                { className: "front" },
-                React.createElement("img", { src: "http://via.placeholder.com/200x200", alt: "Bla" })
-            ),
-            React.createElement(
-                "div",
-                { className: "back" },
-                React.createElement("img", { src: "christmas_tree.jpg", alt: "Christmas tree" })
-            )
-        )
+    return (
+      React.createElement(
+          "div",
+          { className: "card",
+              style: style },
+          React.createElement(
+              "div",
+              { className: faceClass, onClick: props.onClick },
+              React.createElement(
+                  "div",
+                  { className: "front" },
+                  React.createElement("img", { src: "https://raw.githubusercontent.com/btlorch/matching-game/master/client/public/logo.png", alt: "Front" })
+              ),
+              React.createElement(
+                  "div",
+                  { className: "back" },
+                  React.createElement("img", { src: props.imgUrl, alt: "Back" })
+              )
+          )
+      )
     );
 }
 
@@ -50,7 +54,7 @@ function Card(props) {
 class CardDeck extends React.Component {
     constructor(props) {
         super(props);
-        this.cards = createCards(12);
+        this.cards = createCards(20, props.pairedPhotosSet);
         this.state = {
             cardProperties: this.cards.map(() => {
                 return {
@@ -148,6 +152,7 @@ class CardDeck extends React.Component {
                               x: card.x * this.props.gameWindowWidth,
                               y: card.y * this.props.gameWindowHeight,
                               rotation: card.rotation,
+                              imgUrl: card.imgUrl,
                               open: this.state.cardProperties[i].open,
                               match: this.state.cardProperties[i].match,
                               mismatch: this.state.cardProperties[i].mismatch,
@@ -158,11 +163,13 @@ class CardDeck extends React.Component {
     }
 
     render() {
-      return React.createElement(
-          "div",
-          { className: "card-deck" },
-          this.cards.map((card, i) => this.renderCard(i))
-      );
+        return (
+          React.createElement(
+              "div",
+              { className: "card-deck" },
+              this.cards.map((card, i) => this.renderCard(i))
+          )
+        );
     }
 }
 
@@ -199,25 +206,29 @@ class Game extends React.Component {
     }
 
     render() {
-      return React.createElement(
-          "div",
-          { ref: div => {
-                  this.div = div;
-              }, className: "game" },
-          React.createElement(CardDeck, {
-              gameWindowWidth: this.state.gameWindowWidth,
-              gameWindowHeight: this.state.gameWindowHeight
-          })
-      );
+        return (
+          React.createElement(
+              "div",
+              { ref: div => {
+                      this.div = div;
+                  }, className: "game" },
+              React.createElement(CardDeck, { pairedPhotosSet: this.props.pairedPhotosSet,
+                  onClick: this.handleClick,
+                  gameWindowWidth: this.state.gameWindowWidth,
+                  gameWindowHeight: this.state.gameWindowHeight
+              })
+          )
+        );
     }
 }
 
-
 // ReactDOM.render(
-//     React.createElement(Game, null), document.getElementById('root')
+//     React.createElement(Game, { pairedPhotosSet: pairedPhotos }), document.getElementById('root')
 // );
 
-function createCards(numCards) {
+function createCards(numCards, pairedPhotosSet) {
+    let images = pairedPhotosSet;
+
     let cards = Array(numCards);
     let rows = Math.floor(Math.sqrt(numCards));
     let cols = Math.ceil(numCards * 1.0 / rows);
@@ -228,22 +239,29 @@ function createCards(numCards) {
 
     // x and y are going to be the center coordinates
     for (let i = 0; i < numCards; i++) {
+        // let matchKey = images[i].match("^[a-z]+")[0];
+        // console.log(matchKey);
+
         let row = Math.floor(i / cols);
         let col = i % cols;
         cards[i] = {
             x: col * 1.0 / cols + colOffset,
             y: row * 1.0 / rows + rowOffset,
             rotation: Math.round(Math.random() * 20) - 10,
-            matchKey: Math.floor(i / 2),
-        };
+            matchKey: Math.floor(i/2),
+            imgUrl: (i % 2 == 0) ? images[Math.floor(i/2)].url1 : images[Math.floor(i/2)].url2
+          }
     }
+
+    shuffle(cards);
+
     return cards;
 }
 
-// 3rd Party functions
-function sleep(miliseconds) {
-   var currentTime = new Date().getTime();
-
-   while (currentTime + miliseconds >= new Date().getTime()) {
-   }
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }

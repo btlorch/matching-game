@@ -29,6 +29,22 @@ if it's not present, don't show loader */
   display: none;
 }
 
+#centerinput {
+  color: rgba(0,0,0,0.4); text-align: center; font-size: 13px;
+}
+
+#clickMe {
+  display: none;
+  text-align: center;
+  background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
 body {
     height: 100%;
     margin: 0;
@@ -40,8 +56,7 @@ body {
 }
 
 #root {
-    min-height: 100%;
-    /*background: red;*/
+    min-height: calc(100% - 50px);
 }
 
 .game {
@@ -52,7 +67,7 @@ body {
     top:0;
     left:0;
     right:0;
-    margin: 50px;
+    margin: 65px 50px 90px 50px;
     /*background-color: green;*/
 }
 
@@ -64,14 +79,14 @@ body {
     position: absolute;
     margin: 0;
     padding: 0;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     perspective: 800px;
 }
 
 .card img {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     /* Hack to avoid anti-aliasing artifacts */
     outline: 1px solid transparent;
 }

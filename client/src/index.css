@@ -1,4 +1,4 @@
-html,
+/* html,
 
 body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
 #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
@@ -27,6 +27,17 @@ if it's not present, don't show loader */
   z-index: 9999;
   background: url(Preloader_7.gif) center no-repeat #fff;
   display: none;
+}
+
+#clickMe {
+  display: none;
+  background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
 }
 
 body {
@@ -140,4 +151,4 @@ body {
     -o-transition: all 1s;
     transition:all 1s;
     display: none;
-}
+} */

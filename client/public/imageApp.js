@@ -15,7 +15,7 @@ var db = firebase.firestore();
 // initialize with your api key. This will also work in your browser via http://browserify.org/
 
 const appClar = new Clarifai.App({
- apiKey: 'aef7d663b6b84ad28b50dd57efed3780'
+ apiKey: 'e3e941039c1a4a28bdae46f054c7f673'
 });
 
 appClar.inputs.delete().then(
@@ -67,6 +67,17 @@ window.fbAsyncInit = function() {
     sleep(500)
     $(".se-pre-con").fadeOut("slow");
 
+    $("#clickMe").fadeIn("slow");
+
+
+
+ }
+
+ function startGame() {
+   sleep(500)
+   ReactDOM.render(
+       React.createElement(Game, { pairedPhotosSet: pairedPhotos }), document.getElementById('root')
+   );
  }
 
  function makeFacebookPhotoURL( id, accessToken ) {
@@ -136,7 +147,7 @@ window.fbAsyncInit = function() {
          sleep(10)
        }
 
-
+       sleep(1000)
        goToGame()
 
      },
