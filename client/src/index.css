@@ -63,14 +63,14 @@ body {
     position: absolute;
     margin: 0;
     padding: 0;
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
     perspective: 800px;
 }
 
 .card img {
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
     /* Hack to avoid anti-aliasing artifacts */
     outline: 1px solid transparent;
 }

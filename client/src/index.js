@@ -1,9 +1,6 @@
-/*global FB*/
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import axios from 'axios'
 
 
 function Card(props) {
@@ -33,7 +30,7 @@ function Card(props) {
              style={style}>
             <div className={faceClass} onClick={props.onClick}>
                 <div className="front">
-                    <img src="logo.png" alt="Front"/>
+                    <img src="flipside.jpg" alt="Front"/>
                 </div>
                 <div className="back">
                     <img src={props.imgUrl} alt="Back" />
@@ -132,6 +129,13 @@ class CardDeck extends React.Component {
                 that.setState({
                     cardProperties: cardProperties
                 });
+
+                // As soon as the game is over, forward to prize page
+                let remainingCards = cardProperties.reduce((a, e, i) => (!e.hidden) ? a.concat(i) : a, []);
+                if (0 === remainingCards.length) {
+                    window.location.href = "price.html";
+                }
+
             }, 1000);
         }
 
@@ -211,37 +215,167 @@ class Game extends React.Component {
     }
 }
 
+
+class Timer extends React.Component {
+    constructor() {
+        super();
+        this.state = { time: {}, seconds: 120 };
+        this.timer = 0;
+        this.startTimer = this.startTimer.bind(this);
+        this.countDown = this.countDown.bind(this);
+    }
+
+    secondsToTime(secs){
+        let hours = Math.floor(secs / (60 * 60));
+
+        let divisor_for_minutes = secs % (60 * 60);
+        let minutes = Math.floor(divisor_for_minutes / 60);
+
+        let divisor_for_seconds = divisor_for_minutes % 60;
+        let seconds = Math.ceil(divisor_for_seconds);
+
+        let obj = {
+            "h": hours,
+            "m": minutes,
+            "s": seconds
+        };
+        return obj;
+    }
+
+    componentDidMount() {
+        let timeLeftVar = this.secondsToTime(this.state.seconds);
+        this.setState({ time: timeLeftVar });
+
+        this.startTimer();
+    }
+
+    startTimer() {
+        if (this.timer === 0) {
+            this.timer = setInterval(this.countDown, 1000);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.timer !== 0) {
+            clearInterval(this.timer);
+        }
+    }
+
+    countDown() {
+        // Remove one second, set state so a re-render happens.
+        let seconds = this.state.seconds - 1;
+        this.setState({
+            time: this.secondsToTime(seconds),
+            seconds: seconds,
+        });
+
+        // Check if we're at zero.
+        if (seconds === 0) {
+            clearInterval(this.timer);
+            window.location.href = "timeout.html";
+        }
+    }
+
+    render() {
+        return(
+            <span>{this.state.time.m} m {this.state.time.s} s</span>
+        );
+    }
+}
+
+
 ReactDOM.render(
     <Game />,
-    document.getElementById('root')
+    document.getElementById('root'),
 );
+
+ReactDOM.render(
+    <Timer />,
+    document.getElementById('timer')
+);
+
+function multishuffle() {
+    let isArray = Array.isArray || function(value) {
+        return {}.toString.call(value) !== "[object Array]"
+    };
+
+    let arrLength = 0;
+    let argsLength = arguments.length;
+    let rnd, tmp;
+
+    for (let index = 0; index < argsLength; index += 1) {
+        if (!isArray(arguments[index])) {
+            throw new TypeError("Argument is not an array.");
+        }
+
+        if (index === 0) {
+            arrLength = arguments[0].length;
+        }
+
+        if (arrLength !== arguments[index].length) {
+            throw new RangeError("Array lengths do not match.");
+        }
+    }
+
+    while (arrLength) {
+        rnd = Math.floor(Math.random() * arrLength);
+        arrLength -= 1;
+        for (let argsIndex = 0; argsIndex < argsLength; argsIndex += 1) {
+            tmp = arguments[argsIndex][arrLength];
+            arguments[argsIndex][arrLength] = arguments[argsIndex][rnd];
+            arguments[argsIndex][rnd] = tmp;
+        }
+    }
+}
 
 function createCards(numCards) {
     let images = [
-        "dartmouth_01.jpg",
-        "dartmouth_02.jpg",
-        "lisa_01.jpg",
-        "lisa_02.jpg",
-        "stream_01.jpg",
-        "stream_02.jpg",
-        "sunrise_01.jpg",
-        "sunrise_02.jpg",
-        "vietnam_01.jpg",
-        "vietnam_02.jpg",
-        "white_mountains_01.jpg",
-        "white_mountains_02.jpg",
-        "london_01.jpg",
-        "london_02.jpg",
-        "waterfall_01.jpg",
-        "waterfall_02.jpg",
-        "transportation_01.jpg",
-        "transportation_02.jpg",
-        "animal_01.jpg",
-        "animal_02.jpg"
+        "01.jpg",
+        "c.jpg",
+        "02.jpg",
+        "f.jpg",
+        "03.jpg",
+        "j.jpg",
+        "04.jpg",
+        "a.jpg",
+        "05.jpg",
+        "b.jpg",
+        "06.jpg",
+        "h.jpg",
+        "07.jpg",
+        "g.jpg",
+        "08.jpg",
+        "e.jpg",
+        "09.jpg",
+        "i.jpg",
+        "10.jpg",
+        "d.jpg",
     ];
 
-    shuffle(images);
+    let keys = [
+        "dunluce_castle",
+        "dunluce_castle",
+        "huntington_castle",
+        "huntington_castle",
+        "dungaire_castle",
+        "dungaire_castle",
+        "the_rock_of_cashel",
+        "the_rock_of_cashel",
+        "kilchurn_castle",
+        "kilchurn_castle",
+        "dunnottar_castle",
+        "dunnottar_castle",
+        "caerlaverock_castle",
+        "caerlaverock_castle",
+        "st_andews_castle",
+        "st_andews_castle",
+        "donegal_castle",
+        "donegal_castle",
+        "blackness_castle",
+        "blackness_castle",
+    ];
 
+    multishuffle(images, keys);
 
     let cards = Array(numCards);
     let rows = Math.floor(Math.sqrt(numCards));
@@ -253,16 +387,13 @@ function createCards(numCards) {
 
     // x and y are going to be the center coordinates
     for (let i = 0; i < numCards; i++) {
-        let matchKey = images[i].match("^[a-z]+")[0];
-        console.log(matchKey);
-
         let row = Math.floor(i / cols);
         let col = i % cols;
         cards[i] = {
             x: col * 1.0 / cols + colOffset,
             y: row * 1.0 / rows + rowOffset,
             rotation: Math.round(Math.random() * 20) - 10,
-            matchKey: matchKey,
+            matchKey: keys[i],
             imgUrl: images[i],
         };
     }
